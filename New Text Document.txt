@@ -1,0 +1,46 @@
+#lang pl
+
+;;******************Q1**************************;;
+(: open-list : (Listof (Listof Number)) -> (Listof Number))
+(define (open-list lt)
+        (cond [(null? lt) null]
+              [else (append (first lt) (open-list (rest lt)))]
+              ))
+
+(test (open-list '((1 2 3) (2 3 3 4) (9 2 -1) (233 11 90))) => '(1 2 3 2 3 3 4 9 2 -1 233 11 90))
+
+(test (open-list '()) => '())
+
+
+;;******************Q2**************************;;
+(: mini : (Listof Number) ->  Number)
+(define (mini lt)
+      (cond [(null? lt) 0]
+            [else (min(first lt) (mini (rest lt)))]
+             ))
+
+(: maxi : (Listof Number) ->  Number)
+(define (maxi lt)
+      (cond [(null? lt) 0]
+            [else (max(first lt) (maxi (rest lt)))]
+             )) 
+
+
+(: min&max : (Listof (Listof Number)) -> (Listof Number))
+ (define (min&max lt)
+          (cond [(null? lt) null]
+                [else (list (mini (open-list lt)) (maxi (open-list lt)))]
+           ))
+
+(test (min&max '((1 2 3) (2.0 3 3 4) (9 2 -1) (233 11
+90))) => '(-1.0 233.0))
+
+
+;;******************Q3**************************;;
+(: min&max_apply : (Listof (Listof Number)) -> (Listof Number))
+(define (min&max_apply lt)
+  (list (apply min (open-list lt)) (apply max (open-list lt)))
+  )
+
+(test (min&max_apply '((1 2 3) (2 3 3 4) (9 2 -1) (233
+11 90))) => '(-1 233))
