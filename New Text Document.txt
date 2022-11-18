@@ -148,3 +148,37 @@ If we reached EmptyTbl, it means that the key does not exist and it will return 
 (test (search-table 'g  
 (EmptyTbl))
         => #f)
+        
+;;********Q4*********;;
+
+#|Deletion of a table of type Add,
+If the symbol you are looking for is the same as the key,
+we will return the Add table and actually "bypass" the Add where the symbol we wanted to delete is found.
+If we did not find it, we will return the original table.|#
+
+(: remove-item : Table Symbol -> Table)
+(define (remove-item table k)
+   (cases table
+           [(EmptyTbl) (EmptyTbl)]
+           [(Add smbl str tb)
+            (cond[(eq? smbl k) tb]
+                [else(Add smbl str (remove-item tb k))])]
+     ))
+
+(test (remove-item (EmptyTbl) 'b)
+      => (EmptyTbl))
+
+(test (remove-item (Add 'a "AAA" (Add 'b "B" (Add 'a "A" (EmptyTbl)))) 'a)
+      => (Add 'b "B" (Add 'a "A" (EmptyTbl))))
+
+(test (remove-item (Add 'a "AAA" (Add 'b "B" (Add 'a "A" (EmptyTbl)))) 'b)
+      => (Add 'a "AAA" (Add 'a "A" (EmptyTbl))))
+
+(test (remove-item (Add 'a "AAA" (Add 'd "B" (Add 'a "A" (EmptyTbl)))) 'b)
+      => (Add 'a "AAA" (Add 'd "B" (Add 'a "A" (EmptyTbl)))))
+
+(test (remove-item (Add 'a "A" (EmptyTbl)) 'a)
+      => (EmptyTbl))
+
+
+
