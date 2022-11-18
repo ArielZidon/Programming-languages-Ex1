@@ -15,9 +15,11 @@ that has the rest of the internal lists |#
               [else (append (first lt) (open-list (rest lt)))]
               ))
 
-(test (open-list '((1 2 3) (2 3 3 4) (9 2 -1) (233 11 90))) => '(1 2 3 2 3 3 4 9 2 -1 233 11 90))
+(test (open-list '((1 2 3) (2 3 3 4) (9 2 -1) (233 11 90))) 
+        => '(1 2 3 2 3 3 4 9 2 -1 233 11 90))
 
-(test (open-list '()) => '())
+(test (open-list '()) 
+        => '())
 
 
 ;;********Q2*********;;
@@ -133,16 +135,16 @@ If we reached EmptyTbl, it means that the key does not exist and it will return 
 
 (test (search-table 'c (Add 'a "AAA" (Add 'b "B" (Add 'a "A" 
 (EmptyTbl)))))
-=> #f)      
+        => #f)      
 
 (test (search-table 'a (Add 'a "AAA" (Add 'b "B" (Add 'a "A" 
 (EmptyTbl)))))
-=> "AAA")
+        => "AAA")
 
 (test (search-table 'a (Add 'a "AAA" (Add 'b "B" (Add 'a "A" 
 (EmptyTbl)))))
-=> "AAA")
+        => "AAA")
 
 (test (search-table 'g  
 (EmptyTbl))
-=> #f)
+        => #f)
