@@ -15,11 +15,11 @@ that has the rest of the internal lists |#
               [else (append (first lt) (open-list (rest lt)))]
               ))
 
-(test (open-list '((1 2 3) (2 3 3 4) (9 2 -1) (233 11 90))) 
-        => '(1 2 3 2 3 3 4 9 2 -1 233 11 90))
+(test (open-list '((1 2 3) (2 3 3 4) (9 2 -1) (233 11 90)))
+      => '(1 2 3 2 3 3 4 9 2 -1 233 11 90))
 
-(test (open-list '()) 
-        => '())
+(test (open-list '())
+      => '())
 
 
 ;;********Q2*********;;
@@ -49,8 +49,10 @@ through the list and give us a maximum and minimum member. |#
 
 (: min&max : (Listof (Listof Number)) -> (Listof Number))
  (define (min&max lt)
-          (list (mini (open-list lt)) (maxi (open-list lt)))
-          )
+   (cond [(null? (open-list lt)) '(-inf.0 +inf.0)]
+          [else (list (mini (open-list lt)) (maxi (open-list lt)))] 
+          ))
+   
 
 (test (min&max '((1 2 3) (2 3 3 4) (9 2 -1) (233 11 90)))
       => '(-1.0 233.0))
@@ -59,7 +61,7 @@ through the list and give us a maximum and minimum member. |#
       => '(-4.0 -1.0))
 
 (test (min&max '(()))
-      => '(+inf.0 -inf.0))
+      => '(-inf.0 +inf.0))
 
 
 ;;********Q3*********;;
@@ -135,20 +137,20 @@ If we reached EmptyTbl, it means that the key does not exist and it will return 
 
 (test (search-table 'c (Add 'a "AAA" (Add 'b "B" (Add 'a "A" 
 (EmptyTbl)))))
-        => #f)      
+      => #f)      
 
 (test (search-table 'a (Add 'a "AAA" (Add 'b "B" (Add 'a "A" 
 (EmptyTbl)))))
-        => "AAA")
+      => "AAA")
 
 (test (search-table 'a (Add 'a "AAA" (Add 'b "B" (Add 'a "A" 
 (EmptyTbl)))))
-        => "AAA")
+      => "AAA")
 
 (test (search-table 'g  
 (EmptyTbl))
-        => #f)
-        
+      => #f)
+
 ;;********Q4*********;;
 
 #|Deletion of a table of type Add,
@@ -179,6 +181,5 @@ If we did not find it, we will return the original table.|#
 
 (test (remove-item (Add 'a "A" (EmptyTbl)) 'a)
       => (EmptyTbl))
-
 
 
