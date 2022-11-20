@@ -18,7 +18,25 @@ that has the rest of the internal lists |#
 (test (open-list '((1 2 3) (2 3 3 4) (9 2 -1) (233 11 90)))
       => '(1 2 3 2 3 3 4 9 2 -1 233 11 90))
 
+(test (open-list '((233 11 90)))
+      => '(233 11 90))
+
+(test (open-list '((2 4) (4 2)))
+      => '(2 4 4 2))
+
+(test (open-list '((0) (1)))
+      => '(0 1))
+
 (test (open-list '())
+      => '())
+
+(test (open-list '(() (1)))
+      => '(1))
+
+(test (open-list '((2) ()))
+      => '(2))
+
+(test (open-list '(() () ()))
       => '())
 
 
@@ -57,11 +75,23 @@ through the list and give us a maximum and minimum member. |#
 (test (min&max '((1 2 3) (2 3 3 4) (9 2 -1) (233 11 90)))
       => '(-1.0 233.0))
 
+(test (min&max '(() () (2 3 3 4) (9 2 -1) (233 11 90)))
+      => '(-1.0 233.0))
+
+(test (min&max '((+inf.0) (-inf.0) (2 3 3 4) (9 2 -1) (233 11 90)))
+      => '(-inf.0 +inf.0))
+
 (test (min&max '((-1 -2 -3) (-2 -3 -3 -4)))
       => '(-4.0 -1.0))
 
 (test (min&max '(()))
       => '(-inf.0 +inf.0))
+
+(test (min&max '((+inf.0)))
+      => '(+inf.0 +inf.0))
+
+(test (min&max '((-inf.0)))
+      => '(-inf.0 -inf.0))
 
 
 ;;********Q3*********;;
@@ -73,7 +103,9 @@ the existing functions 'min' and 'max'|#
 
 (: min&max_apply : (Listof (Listof Number)) -> (Listof Number))
 (define (min&max_apply lt)
-  (list (apply min (open-list lt)) (apply max (open-list lt)))
+  (cond [(null? (open-list lt)) '(-inf.0 +inf.0)]
+  [else (list (apply min (open-list lt)) (apply max (open-list lt)))]
+  )
   )
 
 (test (min&max_apply '((1 2 3) (2 3 3 4) (9 2 -1) (233 11 90)))
@@ -82,13 +114,26 @@ the existing functions 'min' and 'max'|#
 (test (min&max_apply '((0) (1) (3) (4)))
       => '(0 4))
 
+(test (min&max_apply '((0 1) (0 1) (-1 5) (0 1)))
+      => '(-1 5))
+
+(test (min&max_apply '((-3 6) (-10 3)))
+      => '(-10 6))
+
+(test (min&max_apply '((-inf.0) (+inf.0) (0) (1) (3) (4)))
+      => '(-inf.0 +inf.0))
+
 (test (min&max_apply '((0)))
       => '(0 0))
+
+(test (min&max_apply '(()))
+      => '(-inf.0 +inf.0))
 
 (test (min&max_apply '((+inf.0)))
       => '(+inf.0 +inf.0))
 
-
+(test (min&max_apply '((-inf.0)))
+      => '(-inf.0 -inf.0))
 
 #|-------- part 2 --------|#
 
@@ -111,14 +156,20 @@ Accepts a symbol (key), a string
 (test (EmptyTbl)
       => (EmptyTbl))
 
+(test (Add 'a "aa" (EmptyTbl))
+      => (Add 'a "aa" (EmptyTbl)))
+
 (test (Add 'b "B" (Add 'a "A" (EmptyTbl)))
       => (Add 'b "B" (Add 'a "A" (EmptyTbl))))
+
+(test (Add 'c "B" (Add 'b "A" (EmptyTbl)))
+      => (Add 'c "B" (Add 'b "A" (EmptyTbl))))
 
 (test (Add 'a "aa" (Add 'b "B" (Add 'a "A" (EmptyTbl))))
       => (Add 'a "aa" (Add 'b "B" (Add 'a "A" (EmptyTbl)))))
 
-(test (Add 'a "aa" (EmptyTbl))
-      => (Add 'a "aa" (EmptyTbl)))
+(test (Add 'a "aa" (Add 'b "bb" (Add 'c "cc" (Add 'd "dd" (Add 'e "ee" (Add 'f "ff" (Add 'g "gg" (Add 'h "hh" (EmptyTbl)))))))))
+      => (Add 'a "aa" (Add 'b "bb" (Add 'c "cc" (Add 'd "dd" (Add 'e "ee" (Add 'f "ff" (Add 'g "gg" (Add 'h "hh" (EmptyTbl))))))))))
 
 ;;********Q3*********;;
 
@@ -146,6 +197,10 @@ If we reached EmptyTbl, it means that the key does not exist and it will return 
 (test (search-table 'a (Add 'a "AAA" (Add 'b "B" (Add 'a "A" 
 (EmptyTbl)))))
       => "AAA")
+
+(test (search-table 's (Add 'a "AAA" (Add 'b "B" (Add 'a "A" 
+(EmptyTbl)))))
+      => #f)
 
 (test (search-table 'g  
 (EmptyTbl))
@@ -181,5 +236,3 @@ If we did not find it, we will return the original table.|#
 
 (test (remove-item (Add 'a "A" (EmptyTbl)) 'a)
       => (EmptyTbl))
-
-
